@@ -76,6 +76,7 @@ class proto2cpp:
     self.errorLogFile = "proto2cpp.error.log"
     ## Logging level.
     self.logLevel = self.logNone
+    self.logLevel = self.logAll
 
   ## Handles a file.
   ##
@@ -152,8 +153,12 @@ class proto2cpp:
     # We will be adding lines into this var and then print the var out at the end.
     theOutput = ''
     for line in inputFile:
+      # ww -- Get rid of APS URL link
+      line = re.sub(r'<http://www.gnu.org/licenses/>',r'',line)
+
       # Search for comment ("//") and add one more slash character ("/") to the comment
       # block to make Doxygen detect it.
+      matchTriple = re.search("///", line)
       matchComment = re.search("//", line)
       # Search for semicolon and if one is found before comment, add a third slash character
       # ("/") and a smaller than ("<") character to the comment to make Doxygen detect it.
@@ -164,7 +169,7 @@ class proto2cpp:
         # don't work for multi-nested references and generates problems with URLs and acronyms
         #comment = re.sub(r'\s(\w+)\.(\w+)\s', r' \1::\2 ', comment)
         line = line[:matchComment.start()]
-      elif matchComment is not None:
+      elif matchComment is not None and matchTriple is None:
         if isMultilineComment:
             comment = " * " + line[matchComment.end():]
         else:
@@ -183,7 +188,7 @@ class proto2cpp:
         isMultilineComment = False
 
       # line = line.replace(".", "::") but not in quoted strings (Necessary for import statement)
-      line = re.sub(r'\.(?=(?:[^"]*"[^"]*")*[^"]*$)',r'::',line)
+      #ww line = re.sub(r'\.(?=(?:[^"]*"[^"]*")*[^"]*$)',r'::',line)
 
       # Search for " option ...;", remove it
       line = re.sub(r'\boption\b[^;]+;', r'', line)
