@@ -1,24 +1,23 @@
-Doxygen filter for Google Protocol Buffers .proto files
+Doxygen filter for Google Protocol Buffers .proto and matlab files
 =======================================================
 
-How to enable this filter in Doxygen:
+How to enable these filters in Doxygen:
   1. Generate Doxygen configuration file with command 'doxygen -g <filename>':
        e.g.  doxygen -g doxyfile
-  2. In the Doxygen configuration file, find FILE_PATTERNS and add *.proto:
+  2. In the Doxygen configuration file, find FILE_PATTERNS and add *.proto (*.m is already there):
        FILE_PATTERNS          = *.proto
   3. In the Doxygen configuration file, find EXTENSION_MAPPING and add proto=C++:
-       EXTENSION_MAPPING      = proto=C++
+       EXTENSION_MAPPING      = proto=C++ m=C++
   4. In the Doxygen configuration file, find INPUT_FILTER and add this script:
-       INPUT_FILTER           = "python proto2cpp.py"
+       FILTER_PATTERNS        = "*.proto=python proto2cpp.py" \
+			                          "*.m=perl m2cpp.pl"
   5. Run Doxygen with the modified configuration:
        doxygen doxyfile
    
-Following change is recommended by Timo Marjoniemi but must not be used:
-  In the Doxygen configuration file, find JAVADOC_AUTOBRIEF and set it enabled:
-    JAVADOC_AUTOBRIEF      = YES
    
 Version history
 ===============
+APS Version 
 
 0.8-beta (2018-12-09) OSI
 -------------------------
@@ -78,8 +77,12 @@ Version history
   - initial version
 
 
-Copyright
+Copyrights
 =========
+
+m2cpp.pl
+------------------
+Copyright (c) 2009, Fabrice
 
 Version 0.7-beta -
 ------------------
